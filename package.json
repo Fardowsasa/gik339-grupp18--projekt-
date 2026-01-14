@@ -1,0 +1,28 @@
+{
+  "name": "gik339--grupp-18--projekt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fardowsasa/gik339--grupp-18--Projekt.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Fardowsasa/gik339--grupp-18--Projekt/issues"
+  },
+  "homepage": "https://github.com/Fardowsasa/gik339--grupp-18--Projekt#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "sqlite3": "^5.1.7"
+  },
+  "script": {
+    "start": "node server.js"
+  }
+}
