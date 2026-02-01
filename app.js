@@ -2,66 +2,69 @@ const bilForm = document.getElementById('bilForm');
 const productList = document.getElementById('productList');
 const feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
 
-// Funktion för att visa meddelande
+// Visa meddelande i modal
 function visaMeddelande(text) {
     document.getElementById('modalMessage').innerText = text;
     feedbackModal.show();
 }
 
-// 1. HÄMTA OCH VISA BILAR
-async function fetchProducts() {
-    const res = await fetch('/products');
-    const products = await res.json();
+// HÄMTA OCH VISA BILAR
+async function fetchBilar() {
+    const res = await fetch('/bilar');
+    const bilar = await res.json();
 
-    productList.innerHTML = ''; // Rensa listan innan vi ritar nytt
+    productList.innerHTML = ''; // Rensa innehållet
 
-    products.forEach(p => {
-        // Skapar HTML-kortet som syns på sidan
+    bilar.forEach(bil => {
         productList.innerHTML += `
             <div class="col-md-4 mb-3">
-                <div class="card shadow-sm" style="border-left: 10px solid ${p.color}">
+                <div class="card shadow-sm" style="border-left: 10px solid ${bil.farg}">
                     <div class="card-body">
-                        <h5 class="card-title">${p.name}</h5>
-                        <p class="card-text text-muted">Årsmodell: ${p.price}</p>
-                        <button class="btn btn-outline-danger btn-sm" onclick="deleteProduct(${p.id})">Ta bort</button>
+                        <h5 class="card-title">${bil.modell}</h5>
+                        <p class="card-text text-muted">Årsmodell: ${bil.arsmodell}</p>
+                        <button class="btn btn-outline-danger btn-sm" onclick="deleteBil(${bil.id})">Ta bort</button>
                     </div>
                 </div>
             </div>`;
     });
 }
 
-// 2. SPARA BIL
+// SKAPA NY BIL
 bilForm.addEventListener('submit', async (e) => {
-    e.preventDefault(); // Stoppa omladdning
+    e.preventDefault();
 
-    // Hämta värdena från rutorna
     const data = {
-        name: document.getElementById('modell').value,
-        color: document.getElementById('farg').value,
-        price: document.getElementById('arsmodell').value
+        modell: document.getElementById('modell').value,
+        farg: document.getElementById('farg').value,
+        arsmodell: document.getElementById('arsmodell').value
     };
 
-    // Skicka till servern
-    const res = await fetch('/products', {
+    const res = await fetch('/bilar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
     });
 
     if (res.ok) {
-        bilForm.reset(); // Töm rutorna
-        fetchProducts(); // UPPDATERA LISTAN DIREKT!
+        bilForm.reset();
+        fetchBilar();
         visaMeddelande("Bilen sparad!");
+    } else {
+        const fel = await res.json();
+        visaMeddelande("Fel: " + fel.message);
     }
 });
 
-// 3. TA BORT BIL
-async function deleteProduct(id) {
-    if(confirm("Vill du ta bort bilen?")) {
-        await fetch(`/products/${id}`, { method: 'DELETE' });
-        fetchProducts(); // Uppdatera listan direkt
+// TA BORT BIL
+async function deleteBil(id) {
+    if (confirm("Vill du ta bort bilen?")) {
+        const res = await fetch(`/bilar/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+            fetchBilar();
+            visaMeddelande("Bilen raderad.");
+        }
     }
 }
 
-// Körs när sidan laddas
-fetchProducts();
+// Kör vid start
+fetchBilar();
