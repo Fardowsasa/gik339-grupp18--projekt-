@@ -1,48 +1,58 @@
 <!DOCTYPE html>
 <html lang="sv">
 <head>
-    <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>Bilregister</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bilregister</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <!-- Din egen CSS -->
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Bilregister</h1>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Bilregister</h1>
 
-        <div class="card p-4 mb-5 shadow-sm">
-            <form id="bilForm">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <input type="text" id="modell" class="form-control" placeholder="Modell" required>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="text" id="farg" class="form-control" placeholder="Färg (t.ex. Blue)" required>
-                    </div>
-                    <div class="col-md-3">
-                        <input type="number" id="arsmodell" class="form-control" placeholder="Årsmodell" required>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">Spara</button>
-                    </div>
-                </div>
-            </form>
+    <!-- Formulär -->
+    <div class="card p-4 mb-4 shadow-sm">
+      <form id="bilForm">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <input type="text" id="modell" class="form-control" placeholder="Modell" required />
+          </div>
+          <div class="col-md-3">
+            <input type="text" id="farg" class="form-control" placeholder="Färg (t.ex. blå)" required />
+          </div>
+          <div class="col-md-3">
+            <input type="number" id="arsmodell" class="form-control" placeholder="Årsmodell" required />
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Spara</button>
+          </div>
         </div>
-
-        <div id="productList" class="row"></div>
+      </form>
     </div>
 
-    <div class="modal fade" id="feedbackModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body text-center" id="modalMessage"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stäng</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Lista för sparade bilar -->
+    <h2 class="mb-3">Alla sparade bilar</h2>
+    <div id="productList" class="row"></div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="app.js"></script>
+  <!-- Modal -->
+  <div class="modal fade" id="feedbackModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body text-center" id="modalMessage"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stäng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Din app.js -->
+  <script src="app.js"></script>
 </body>
 </html>
