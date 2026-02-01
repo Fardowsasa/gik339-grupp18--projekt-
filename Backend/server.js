@@ -1,136 +1,88 @@
-const path = require("path");
-const express = require("express");
-const sqlite3 = require("sqlite3").verbose();
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #e6f4ea; /* Ljusgrön /
+}
 
-const app = express();
-const PORT = 3000;
+h1, h2 {
+  font-weight: 600;
+  color: #212529;
+}
 
-// Middleware
-app.use(express.json());
+.card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease-in-out;
+}
 
-// Servera frontend (så du slipper Live Server-problemet)
-app.use(express.static(path.join(__dirname, "client")));
+.card:hover {
+  transform: scale(1.02);
+}
 
-// DB
-const db = new sqlite3.Database("./films.db", (err) => {
-  if (err) {
-    console.error("Kunde inte öppna databasen:", err.message);
-  } else {
-    console.log("SQLite DB ansluten.");
-  }
-});
+.card .btn {
+  border-radius: 6px;
+}
 
-// Skapa tabell (1 resurs) om den inte finns
-db.run(
-  `
-  CREATE TABLE IF NOT EXISTS films (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT NOT NULL,
-    director TEXT NOT NULL,
-    year INTEGER NOT NULL,
-    rating INTEGER NOT NULL
-  )
-  `,
-  (err) => {
-    if (err) console.error("Fel vid CREATE TABLE:", err.message);
-  }
-);
+.card-title {
+  font-weight: 600;
+}
 
-/**
- * REST-endpoints (enligt instruktion):
- * GET    /resurs
- * GET    /resurs/:id (valfri men praktisk)
- * POST   /resurs
- * PUT    /resurs
- * DELETE /resurs/:id
- *
- * Vi använder /films som "resurs".
- */
+#productList .card {
+  transition: transform 0.2s;
+}
 
-// GET /films (hämta alla)
-app.get("/films", (req, res) => {
-  db.all("SELECT * FROM films ORDER BY id DESC", (err, rows) => {
-    if (err) return res.status(500).json({ message: "DB-fel vid hämtning.", error: err.message });
-    res.json(rows);
-  });
-});
+#productList .card:hover {
+  transform: scale(1.02);
+}
 
-// GET /films/:id (hämta en)
-app.get("/films/:id", (req, res) => {
-  const id = Number(req.params.id);
-  db.get("SELECT * FROM films WHERE id = ?", [id], (err, row) => {
-    if (err) return res.status(500).json({ message: "DB-fel vid hämtning av film.", error: err.message });
-    if (!row) return res.status(404).json({ message: "Film hittades inte." });
-    res.json(row);
-  });
-});
+.modal-content {
+  border-radius: 12px;
+}
 
-// POST /films (skapa)
-app.post("/films", (req, res) => {
-  try {
-    const { title, director, year, rating } = req.body;
+button:focus {
+  outline: none;
+  box-shadow: none;
+}
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #e6f4ea; / Ljusgrön */
+}
 
-    if (!title || !director || year == null || rating == null) {
-      return res.status(400).json({ message: "Alla fält måste vara ifyllda." });
-    }
+h1, h2 {
+  font-weight: 600;
+  color: #212529;
+}
 
-    const sql = "INSERT INTO films (title, director, year, rating) VALUES (?, ?, ?, ?)";
-    const params = [title.trim(), director.trim(), Number(year), Number(rating)];
+.card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease-in-out;
+}
 
-    db.run(sql, params, function (err) {
-      if (err) return res.status(500).json({ message: "DB-fel vid skapande.", error: err.message });
+.card:hover {
+  transform: scale(1.02);
+}
 
-      res.status(201).json({
-        message: "Film skapad!",
-        id: this.lastID,
-      });
-    });
-  } catch (e) {
-    res.status(500).json({ message: "Serverfel vid skapande.", error: String(e) });
-  }
-});
+.card .btn {
+  border-radius: 6px;
+}
 
-// PUT /films (uppdatera) - id ska ligga i body
-app.put("/films", (req, res) => {
-  try {
-    const { id, title, director, year, rating } = req.body;
+.card-title {
+  font-weight: 600;
+}
 
-    if (!id) return res.status(400).json({ message: "id saknas för uppdatering." });
-    if (!title || !director || year == null || rating == null) {
-      return res.status(400).json({ message: "Alla fält måste vara ifyllda." });
-    }
+#productList .card {
+  transition: transform 0.2s;
+}
 
-    const sql = `
-      UPDATE films
-      SET title = ?, director = ?, year = ?, rating = ?
-      WHERE id = ?
-    `;
-    const params = [title.trim(), director.trim(), Number(year), Number(rating), Number(id)];
+#productList .card:hover {
+  transform: scale(1.02);
+}
 
-    db.run(sql, params, function (err) {
-      if (err) return res.status(500).json({ message: "DB-fel vid uppdatering.", error: err.message });
-      if (this.changes === 0) return res.status(404).json({ message: "Ingen film uppdaterades (id finns inte)." });
+.modal-content {
+  border-radius: 12px;
+}
 
-      res.json({ message: "Film uppdaterad!" });
-    });
-  } catch (e) {
-    res.status(500).json({ message: "Serverfel vid uppdatering.", error: String(e) });
-  }
-});
-
-// DELETE /films/:id (ta bort)
-app.delete("/films/:id", (req, res) => {
-  const id = Number(req.params.id);
-
-  db.run("DELETE FROM films WHERE id = ?", [id], function (err) {
-    if (err) return res.status(500).json({ message: "DB-fel vid borttagning.", error: err.message });
-    if (this.changes === 0) return res.status(404).json({ message: "Film hittades inte (kunde inte tas bort)." });
-
-    res.json({ message: "Film borttagen!" });
-  });
-});
-
-// Start
-app.listen(PORT, () => {
-  console.log(`Servern körs på http://localhost:${PORT}`);
-});
+button:focus {
+  outline: none;
+  box-shadow: none;
+}
