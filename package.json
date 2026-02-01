@@ -2,9 +2,10 @@
   "name": "gik339--grupp-18--projekt",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo "Error: no test specified" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -21,8 +22,4 @@
   "dependencies": {
     "express": "^5.2.1",
     "sqlite3": "^5.1.7"
-  },
-  "script": {
-    "start": "node server.js"
   }
-}
